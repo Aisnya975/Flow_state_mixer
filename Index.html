@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    body {
+        background-color: #1a1a1a;
+        color: #ffffff;
+        font-family: 'Segoe UI', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+    } 
+    h2{
+        font-weight: 300;
+        letter-spacing: 2px;
+        margin-bottom: 40px;
+        margin-top: 50px;
+    }
+    .Sounds-Control {
+        background-color: #2d2d2d;
+        padding: 20px;
+        border-radius: 15px;
+        width: 300px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgb(0,0,0,0.5) ;
+        text-align: left;
+    }
+    label {
+        font-size: 14px;
+        color: #aaaaaa;
+        display: block;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px ;
+    }
+    input[type=range] {
+        width: 100%;
+        height: 6px;
+        background: #444;
+        border-radius: 5px;
+        outline: none;
+        -webkit-appearance: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #00d2ff;
+        cursor: pointer;
+        transition: background .2s; 
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+        background: #ffffff;
+    }
+    </style>
+</head>
+<body>
+    <h2>FlowState Mixer</h2>
+    
+    <div class="Sounds-Control">  
+        <label > Rain Voice</label> 
+        <Audio id="audio_rain"  src="rain.mp3" loop>rain </Audio>
+    <input  id="slider_rain" type="range" min="0" max="100" value="50">
+</div>
+
+    <div class="Sounds-Control">
+        <label > Cafe Voice</label>
+        <audio src="cafe.mp3" id="cafe_audio" loop></audio>
+    <input type="range" id="slider_cafe" min="0" max="100" value="50">
+</div>
+
+    <div class="Sounds-Control">
+        <label > Fire Voice</label>
+        <audio src="fire.mp3" id="fire_audio" loop></audio>
+        <input type="range" id="slider_fire" min="0" max="100" value="50">
+</div>
+
+    <div class="Sounds-Control" style="border: 1 px dashed #00d2ff; text-align: center;">
+        <label > Add Sounds</label>
+        <input type="file" id="file_upload" accept="audio/*" style="display: none;">
+        <button onclick="document.getElementById('file_upload').click()" style="background: #00d2ff; border: none; padding: 10px 20px; 
+            border-radius: 5px; cursor: pointer; font-weight: bold;">Select Mp3 file</button>
+    </div>
+
+    <div id="costum_sounds_area"></div>
+
+<script>
+    const audioRain = document.getElementById('audio_rain');
+    const sliderRain = document.getElementById('slider_rain');
+
+    sliderRain.addEventListener('input', function (){
+        const nilaiVolume = sliderRain.value;
+
+        audioRain.volume = nilaiVolume / 100;
+        audioRain.play();
+    });
+
+    const cafeAudio = document.getElementById('cafe_audio');
+    const sliderCafe = document.getElementById('slider_cafe');
+
+    sliderCafe.addEventListener('input', function(){
+        const nilaiVolume = sliderCafe.value;
+
+        cafeAudio.volume = nilaiVolume / 100;
+        cafeAudio.play();
+    });
+
+    const fireAudio = document.getElementById('fire_audio');
+    const sliderFire = document.getElementById('slider_fire');
+
+    sliderFire.addEventListener('input', function(){
+        const nilaiVolume = sliderFire.value;
+
+        fireAudio.volume = nilaiVolume / 100;
+        fireAudio.play();
+    });
+
+    const uploadInput = document.getElementById('file_upload');
+    const audioCostum = document.getElementById('costum_sounds_area');
+    
+
+    uploadInput.addEventListener('change', function(event){
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const fileURL = URL.createObjectURL(file);
+
+        const divNew = document.createElement('div');
+        divNew.className = 'Sounds-Control';
+
+        const newLabel = document.createElement('label');
+        newLabel.innerText = "🎵 " + file.name;
+
+        const audioNew = document.createElement('audio');
+        audioNew.src = fileURL;
+        audioNew.loop = true;
+
+        const sliderNew = document.createElement('input');
+        sliderNew.type = 'range';
+        sliderNew.min = 0;
+        sliderNew.max = 100;
+        sliderNew.value = 50;
+
+        audioNew.volume = 0.5;
+        audioNew.play();
+
+        sliderNew.addEventListener('input', function() {
+            audioNew.volume = sliderNew.value / 100;
+        });
+
+        divNew.appendChild(newLabel);
+        divNew.appendChild(audioNew);
+        divNew.appendChild(sliderNew);
+
+        audioCostum.appendChild(divNew);
+
+        uploadInput.value = ''; 
+    });
+
+</script>
+</body>
+</html>
